@@ -7,17 +7,12 @@ import type { Plan, Category } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
 import EditMemoryModal from "./EditMemoryModal";
 
-type MemoryEditPayload = {
-  note: string;
-  reflection: string;
-  photos: Array<{ id?: string; url: string }>;
-  completedAt?: string;
-};
+type MemoryEditPayload = Omit<Plan["memory"], "completedAt"> & { completedAt?: string };
 
 interface MemoriesViewProps {
   plans: Plan[];
   onDelete: (id: string) => void;
-  onEdit: (planId: string, memory: MemoryEditPayload) => Promise<Plan>;
+  onEdit: (planId: string, memory: Plan["memory"]) => Promise<Plan>;
 }
 
 export default function MemoriesView({ plans, onDelete, onEdit }: MemoriesViewProps) {
