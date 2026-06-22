@@ -149,10 +149,11 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
                 try {
                   let uploaded: string[] = [];
                   if (files.length) uploaded = await uploadFiles(files);
+                  const normalizedPhotos = uploaded.map((url, idx) => ({ id: `new-${Date.now()}-${idx}`, url }));
                   await onConfirm({
                     note,
                     reflection,
-                    photos: uploaded.map(url => ({ url })),
+                    photos: normalizedPhotos,
                     completedAt: new Date().toISOString(),
                   });
                 } catch (err) {
