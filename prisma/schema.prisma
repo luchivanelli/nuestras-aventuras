@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Plan {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @default("")
+  date        String?
+  category    String
+  status      String   @default("pendiente")
+  priority    String   @default("media")
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  memory      Memory?
+}
+
+model Memory {
+  id          String   @id @default(cuid())
+  note        String   @default("")
+  reflection  String   @default("")
+  completedAt DateTime @default(now())
+
+  planId      String   @unique
+  plan        Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+  photos      Photo[]
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  url       String
+  createdAt DateTime @default(now())
+
+  memoryId  String
+  memory    Memory   @relation(fields: [memoryId], references: [id], onDelete: Cascade)
+}

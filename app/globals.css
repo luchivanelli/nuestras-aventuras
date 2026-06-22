@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+@import "tailwindcss";
+
+
+:root {
+  --rose: #C9788A;
+  --rose-light: #E8A4B0;
+  --rose-pale: #F5E6E9;
+  --blush: #F9EEF1;
+  --cream: #FDFAF8;
+  --warm-gray: #8B7D82;
+  --dark: #2D1F26;
+  --gold: #C4A882;
+  --gold-light: #E8D5B7;
+  --sage: #8FAF9F;
+  --sage-light: #C5DDD5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--dark);
+  font-family: 'Inter', sans-serif;
+}
+
+.font-display {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.float { animation: float 3s ease-in-out infinite; }
+.fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+.heartbeat { animation: heartbeat 1.2s ease-in-out infinite; }
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(201,120,138,0.15);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--blush); }
+::-webkit-scrollbar-thumb { background: var(--rose-light); border-radius: 3px; }
+
+/* Custom range */
+input[type=range] {
+  accent-color: var(--rose);
+}
