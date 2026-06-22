@@ -3,16 +3,14 @@ import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { useState } from "react";
 import { Trash2, MapPin, Calendar, Edit2, Maximize2, X, Search } from "lucide-react";
-import type { Plan, Category } from "@/lib/types";
+import type { Plan, Category, EditMemoryPayload } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
 import EditMemoryModal from "./EditMemoryModal";
-
-type MemoryEditPayload = Omit<Plan["memory"], "completedAt"> & { completedAt?: string };
 
 interface MemoriesViewProps {
   plans: Plan[];
   onDelete: (id: string) => void;
-  onEdit: (planId: string, memory: Plan["memory"]) => Promise<Plan>;
+  onEdit: (planId: string, memory: EditMemoryPayload) => Promise<Plan>;
 }
 
 export default function MemoriesView({ plans, onDelete, onEdit }: MemoriesViewProps) {
@@ -42,12 +40,7 @@ export default function MemoriesView({ plans, onDelete, onEdit }: MemoriesViewPr
     });
   const editingPlan = plans.find(p => p.id === editingPlanId);
 
-  const handleEditMemory = async (memory: {
-    note: string;
-    reflection: string;
-    photos: Array<{ id?: string; url: string }>;
-    completedAt?: string;
-  }) => {
+  const handleEditMemory = async (memory: EditMemoryPayload) => {
     try {
       setIsLoading(true);
       const normalizedPhotos: Array<{ id: string; url: string }> = (memory.photos || []).map((p, idx) => ({

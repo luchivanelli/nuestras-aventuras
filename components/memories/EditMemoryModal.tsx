@@ -1,16 +1,12 @@
 "use client";
 import { useState } from "react";
 import { X, Upload, Trash2 } from "lucide-react";
-import type { Plan } from "@/lib/types";
+import type { Plan, EditMemoryPayload } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
 
 interface EditMemoryModalProps {
   plan: Plan;
-  onConfirm: (memory: {
-    note: string;
-    reflection: string;
-    photos: Array<{ id?: string; url: string }>;
-  }) => void;
+  onConfirm: (memory: EditMemoryPayload) => void;
   onClose: () => void;
 }
 

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useTransition } from "react";
-import type { Plan } from "./types";
+import type { Plan, EditMemoryPayload } from "./types";
 import {
   getPlans,
   createPlan,
@@ -45,8 +45,8 @@ export function useStore() {
     setPlans(prev => prev.map(p => p.id === id ? updated : p));
   }, []);
 
-  const editMemoryFn = useCallback(async (planId: string, memory: Plan["memory"]) => {
-    const updated = await editMemory(planId, memory);
+  const editMemoryFn = useCallback(async (planId: string, memory: EditMemoryPayload) => {
+    const updated = await editMemory(planId, memory as any);
     setPlans(prev => prev.map(p => p.id === updated.id ? updated : p));
     return updated;
   }, []);

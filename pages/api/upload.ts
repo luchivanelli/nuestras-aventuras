@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     maxFileSize: 50 * 1024 * 1024, // 50 MB per file
   });
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, (err: unknown, fields: any, files: any) => {
     if (err) {
       console.error('Upload error', err);
       return res.status(500).json({ error: 'Error parsing files' });

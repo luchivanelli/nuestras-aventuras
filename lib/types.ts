@@ -17,6 +17,13 @@ export interface Memory {
   photos?: Array<{ id: string; url: string }>;
 }
 
+export type EditMemoryPayload = {
+  note: string;
+  reflection: string;
+  photos: Array<{ id?: string; url: string }>;
+  completedAt?: string;
+};
+
 export interface Plan {
   id: string;
   title: string;
