@@ -50,10 +50,15 @@ export default function MemoriesView({ plans, onDelete, onEdit }: MemoriesViewPr
   }) => {
     try {
       setIsLoading(true);
+      const normalizedPhotos: Array<{ id: string; url: string }> = (memory.photos || []).map((p, idx) => ({
+        id: p.id ?? `new-${Date.now()}-${idx}`,
+        url: p.url,
+      }));
+
       await onEdit(editingPlanId!, {
         note: memory.note,
         reflection: memory.reflection,
-        photos: memory.photos,
+        photos: normalizedPhotos,
         completedAt: memory.completedAt || new Date().toISOString(),
       });
       setEditingPlanId(null);
