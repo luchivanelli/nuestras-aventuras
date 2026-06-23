@@ -3,6 +3,7 @@ import { useState } from "react";
 import { X, Heart, Upload, Trash2, Loader2 } from "lucide-react";
 import type { Plan } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
+import { compressMultiple } from "@/lib/imageCompression";
 
 interface CompleteModalProps {
   plan: Plan;
@@ -37,8 +38,12 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
 
   async function uploadFiles(filesToUpload: File[]) {
     if (!filesToUpload.length) return [] as string[];
+    
+    // Comprimir imágenes antes de subir
+    const compressedFiles = await compressMultiple(filesToUpload);
+    
     const form = new FormData();
-    filesToUpload.forEach(f => form.append('files', f));
+    compressedFiles.forEach(f => form.append('files', f));
     const res = await fetch('/api/upload', { method: 'POST', body: form });
     if (!res.ok) throw new Error('Upload failed');
     const data = await res.json();
