@@ -1,19 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import fs from 'fs';
-import path from 'path';
+
+const MIME_TYPES: Record<string, string> = {
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.png': 'image/png',
+  '.gif': 'image/gif',
+  '.webp': 'image/webp',
+};
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
-const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -24,7 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Formidable v3 uses a factory function
   const form = formidable({
     multiples: true,
-    uploadDir,
     keepExtensions: true,
     maxFileSize: 50 * 1024 * 1024, // 50 MB per file
   });
@@ -52,23 +52,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const urls: string[] = [];
     for (const f of fileList) {
       try {
-        const fp = (f as any).filepath || (f as any).path || (f as any).file?.filepath || (f as any).file?.path;
-        let filename = '';
-        if (fp) {
-          filename = path.basename(fp);
-        } else if ((f as any).newFilename) {
-          filename = (f as any).newFilename;
-        } else if ((f as any).originalFilename) {
-          filename = (f as any).originalFilename;
-        } else if ((f as any).originalname) {
-          filename = (f as any).originalname;
-        } else if ((f as any).name) {
-          filename = String((f as any).name);
-        } else {
-          // fallback: generate a name
-          filename = `upload-${Date.now()}`;
+        // Get file path from Formidable v3
+        const filepath = (f as any).filepath || (f as any).path;
+        if (!filepath) {
+          console.error('No filepath found in file object');
+          continue;
         }
-        urls.push(`/uploads/${filename}`);
+
+        // Read file content
+        const buffer = fs.readFileSync(filepath);
+        const base64 = buffer.toString('base64');
+
+        // Determine MIME type from extension or default to jpeg
+        const originalFilename = (f as any).originalFilename || (f as any).newFilename || 'file.jpg';
+        const ext = originalFilename.substring(originalFilename.lastIndexOf('.')).toLowerCase();
+        const mimeType = MIME_TYPES[ext] || 'image/jpeg';
+
+        // Create data URL with base64
+        const dataUrl = `data:${mimeType};base64,${base64}`;
+        urls.push(dataUrl);
+
+        // Clean up temp file
+        fs.unlinkSync(filepath);
       } catch (e) {
         console.error('Error processing uploaded file entry', e, f);
       }
