@@ -161,7 +161,7 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
                     note,
                     reflection,
                     photos: normalizedPhotos,
-                    completedAt: new Date().toISOString(),
+                    completedAt: plan.date,
                   });
                   // Cierra el modal solo después de completarse
                   onClose();
