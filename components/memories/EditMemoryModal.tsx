@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { X, Upload, Trash2 } from "lucide-react";
+import { X, Upload, Trash2, Loader2 } from "lucide-react";
 import type { Plan, EditMemoryPayload } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
 
@@ -18,6 +18,7 @@ export default function EditMemoryModal({ plan, onConfirm, onClose }: EditMemory
   );
   const [newFiles, setNewFiles] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const MAX_PHOTOS = 5;
   const cat = CATEGORIES[plan.category];
 
@@ -51,6 +52,7 @@ export default function EditMemoryModal({ plan, onConfirm, onClose }: EditMemory
   }
 
   const handleConfirm = async () => {
+    setIsLoading(true);
     try {
       let uploaded: string[] = [];
       if (newFiles.length) uploaded = await uploadFiles(newFiles);
@@ -66,6 +68,8 @@ export default function EditMemoryModal({ plan, onConfirm, onClose }: EditMemory
     } catch (err) {
       console.error('Error uploading photos', err);
       alert('Error al subir fotos');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -189,18 +193,21 @@ export default function EditMemoryModal({ plan, onConfirm, onClose }: EditMemory
 
           <div className="flex gap-3 pt-1">
             <button onClick={onClose}
-              className="flex-1 py-3 rounded-2xl text-sm font-semibold border-2 transition-all hover:bg-gray-50"
+              disabled={isLoading}
+              className="flex-1 py-3 rounded-2xl text-sm font-semibold border-2 transition-all hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ borderColor: "#F0E0E4", color: "#8B7D82" }}>
               Cancelar
             </button>
             <button
               onClick={handleConfirm}
-              className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white transition-all flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(135deg, #C9788A, #E8A4B0)",
                 boxShadow: "0 6px 20px rgba(201,120,138,0.35)",
               }}>
-              ✏️ Guardar Cambios
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <>✏️</> }
+              {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
         </div>

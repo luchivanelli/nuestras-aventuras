@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { X, Heart, Upload, Trash2 } from "lucide-react";
+import { X, Heart, Upload, Trash2, Loader2 } from "lucide-react";
 import type { Plan } from "@/lib/types";
 import { CATEGORIES } from "@/lib/types";
 
@@ -15,6 +15,7 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
   const [reflection, setReflection] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const MAX_PHOTOS = 5;
   const cat = CATEGORIES[plan.category];
 
@@ -146,6 +147,7 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
             </button>
             <button
               onClick={async () => {
+                setIsLoading(true);
                 try {
                   let uploaded: string[] = [];
                   if (files.length) uploaded = await uploadFiles(files);
@@ -159,15 +161,18 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
                 } catch (err) {
                   console.error('Error uploading photos', err);
                   alert('Error al subir fotos');
+                } finally {
+                  setIsLoading(false);
                 }
               }}
-              className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white transition-all flex items-center justify-center gap-2"
+              disabled={isLoading}
+              className="flex-1 py-3 rounded-2xl text-sm font-semibold text-white transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               style={{
                 background: "linear-gradient(135deg, #C9788A, #E8A4B0)",
                 boxShadow: "0 6px 20px rgba(201,120,138,0.35)",
               }}>
-              <Heart className="w-4 h-4" fill="white" />
-              Completar
+              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Heart className="w-4 h-4" fill="white" />}
+              {isLoading ? 'Guardando...' : 'Completar'}
             </button>
           </div>
         </div>
