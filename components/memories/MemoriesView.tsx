@@ -54,7 +54,6 @@ export default function MemoriesView({ plans, onDelete, onEdit }: MemoriesViewPr
         photos: normalizedPhotos,
         completedAt: memory.completedAt || new Date().toISOString(),
       });
-      setEditingPlanId(null);
     } catch (error) {
       console.error("Error al editar recuerdo:", error);
     } finally {

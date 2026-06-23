@@ -7,7 +7,7 @@ import { compressMultiple } from "@/lib/imageCompression";
 
 interface CompleteModalProps {
   plan: Plan;
-  onConfirm: (memory: Plan["memory"]) => void;
+  onConfirm: (memory: Plan["memory"]) => Promise<void>;
   onClose: () => void;
 }
 
@@ -163,6 +163,8 @@ export default function CompleteModal({ plan, onConfirm, onClose }: CompleteModa
                     photos: normalizedPhotos,
                     completedAt: new Date().toISOString(),
                   });
+                  // Cierra el modal solo después de completarse
+                  onClose();
                 } catch (err) {
                   console.error('Error uploading photos', err);
                   alert('Error al subir fotos');

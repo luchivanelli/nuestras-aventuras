@@ -143,8 +143,8 @@ export default function PlansView({ plans, onAdd, onUpdate, onDelete, onComplete
       {completingPlan && (
         <CompleteModal
           plan={completingPlan}
-          onConfirm={memory => {
-            onComplete(completingPlan.id, memory);
+          onConfirm={async (memory) => {
+            await onComplete(completingPlan.id, memory);
             setCompletingPlan(null);
           }}
           onClose={() => setCompletingPlan(null)}

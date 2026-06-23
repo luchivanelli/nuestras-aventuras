@@ -7,7 +7,7 @@ import { compressMultiple } from "@/lib/imageCompression";
 
 interface EditMemoryModalProps {
   plan: Plan;
-  onConfirm: (memory: EditMemoryPayload) => void;
+  onConfirm: (memory: EditMemoryPayload) => Promise<void>;
   onClose: () => void;
 }
 
@@ -65,11 +65,13 @@ export default function EditMemoryModal({ plan, onConfirm, onClose }: EditMemory
         ...photos,
         ...uploaded.map(url => ({ url })),
       ];
-      onConfirm({
+      await onConfirm({
         note,
         reflection,
         photos: allPhotos,
       });
+      // Solo cierra el modal después de completarse la server action
+      onClose();
     } catch (err) {
       console.error('Error uploading photos', err);
       alert('Error al subir fotos');
