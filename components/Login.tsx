@@ -86,7 +86,7 @@ export default function Login({ onUnlock }: LoginProps) {
           <div className="flex items-center gap-2 mb-6">
             <Lock className="w-4 h-4" style={{ color: "#C9788A" }} />
             <p className="text-sm font-medium" style={{ color: "#8B7D82" }}>
-              ¿Cuándo empezó todo?
+              ¿Cuándo nos pusimos de novios?
             </p>
           </div>
 
@@ -139,10 +139,6 @@ export default function Login({ onUnlock }: LoginProps) {
             Entrar a nuestro espacio ❤️
           </button>
         </div>
-
-        <p className="text-center text-xs mt-6" style={{ color: "#8B7D82" }}>
-          Hint: es cuando nos pusimos de novios ✨
-        </p>
       </div>
     </div>
   );
